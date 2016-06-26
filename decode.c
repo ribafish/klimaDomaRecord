@@ -41,6 +41,7 @@ int main(int argc, char** argv){
 	char line[256];
 	int index = 0;
 	char* nIndex = 0;
+	int i = 0;
 	while (fgets(line, 256, f) != NULL){
 		result = strtok( line, delims );
 		index = 0;
@@ -54,6 +55,10 @@ int main(int argc, char** argv){
 				val2 = atoi(result);
 				char dec = decode(val1,val2);
 				fprintf(out,"%c",dec);
+				if (dec != '[' && dec != ']') i++;
+				if (i%8 == 0) {
+					fprintf(out, "%s", " ");
+				}
 			}else{
 				val1 = atoi(result);
 			}
