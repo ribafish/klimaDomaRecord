@@ -84,24 +84,25 @@ void print_binary(char c){
 }
 
 void print_usage(){
-	fprintf(stderr, "Usage: encode [-s speed] [-d direction] [-p power] [-o output] [-m mode] temperature (16 to 31)\n
-	Speed = AUTO, LOW, MID, HIGH\n
-	Direction = 0: UP, 1, 2, 3, 4:DOWN, SWING\n
-	Mode = COOL, HOT\n
-	Power = ON, OFF\n
+	fprintf(stderr, "Usage: encode [-s speed] [-d direction] [-p power] [-o output] [-m mode] temperature (16 to 31)\n\
+	Speed = AUTO, LOW, MID, HIGH\n\
+	Direction = 0: UP, 1, 2, 3, 4:DOWN, SWING\n\
+	Mode = COOL, HOT\n\
+	Power = ON, OFF\n\
 	Output = HEX, BIN\n");
 	exit(-1);
 }
 
 int main(int argc, char** argv) {
 
+	int opt;
 	int output = BIN;
 	int quiet = 0;
 	uint8_t temp = 23;
 	uint8_t speed = SPEED1;
 	uint8_t dir = DIR0;
 
-	uint8_t command[13] = {
+	uint8_t command[14] = {
 		BYTE0, BYTE1, BYTE2, BYTE3, BYTE4,
 		BYTE5_ON, BYTE6_COLD, 0x00, 0x00,
 		BYTE9_12, BYTE9_12, BYTE9_12, BYTE9_12,
@@ -198,27 +199,27 @@ int main(int argc, char** argv) {
 
 	int i;
 
-	int checksum = reverse_byte(reverse_byte(temp)+reverse_byte(option)+reverse_byte(flux)+reverse_byte(on_off_mode));
-	checksum = 0;
-	for ( i = 0 ; i < 12 ; i++ ){
-		checksum+=reverse_byte(frame[i]);
+	uint32_t checksum = 0;
+	for ( i = 0 ; i < 13 ; i++ ){
+		checksum+=reverse_byte(command[i]);
 	}
 	checksum = reverse_byte(checksum);
 	checksum &= 0xFF; // force 1 byte
 	if (!quiet) {
 		printf("\nchecksum = ");
 		print_binary(checksum);
+		printf("\n");
 	}
-	frame[13] = checksum;
+	command[14] = checksum;
 
 	if (output = BIN) {
-		for (i = 0 ; i < 13 ; i++){
-			print_binary(frame[i]);
+		for (i = 0 ; i <= 14 ; i++){
+			print_binary(command[i]);
 			printf(" ");
 		}
 	} else if (output = HEX) {
 		printf("0x");
-		for (i = 0 ; i < 13 ; i++){
+		for (i = 0 ; i <= 14 ; i++){
 			printf("%H", command[i]);
 		}
 	} 
