@@ -36,5 +36,7 @@ next 3 bits: fan direction
 last 2 bits: dont know
 	always: 00
 byte 9-12: 00000000
-byte 13: ???
+byte 13: CRC: computed as: 
+        reverse(big endian) all bytes before and add them together - cut the overflow away.
+        then reverse the calculated CRC
 
