@@ -248,12 +248,12 @@ int main(int argc, char** argv) {
 	}
 	command[14] = checksum;
 
-	if (output = BIN) {
+	if (output == BIN) {
 		for (i = 0 ; i <= 14 ; i++){
 			print_binary(command[i]);
 			printf(" ");
 		}
-	} else if (output = HEX) {
+	} else if (output == HEX) {
 		printf("0x");
 		for (i = 0 ; i <= 14 ; i++){
 			printf("%X", command[i]);
