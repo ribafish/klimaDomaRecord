@@ -112,6 +112,8 @@ int main(int argc, char** argv) {
 	while ((opt = getopt(argc, argv, "qs:d:m:p:o:")) != -1) {
 		switch (opt) {
 			case 'm':
+				if (!quiet)
+					printf("Set mode to %s\n", optarg);
 				if (!strcmp(optarg,"COOL"))
 					command[6] = BYTE6_COLD;
 				else if (!strcmp(optarg,"HOT"))
@@ -122,6 +124,8 @@ int main(int argc, char** argv) {
 				}
 				break;
 			case 's':
+				if (!quiet)
+					printf("Set speed to %s\n", optarg);
 				if (!strcmp(optarg,"AUTO"))
 					speed = SPEED_AUTO;
 				else if (!strcmp(optarg,"LOW"))
@@ -136,6 +140,8 @@ int main(int argc, char** argv) {
 				}
 				break;
 			case 'd':
+				if (!quiet)
+					printf("Set direction to %s\n", optarg);
 				if (!strcmp(optarg,"SWING"))
 					dir = DIR_SWING;
 				else if (!strcmp(optarg,"0"))
@@ -154,6 +160,8 @@ int main(int argc, char** argv) {
 				}
 				break;
 			case 'p':
+				if (!quiet)
+					printf("Set power to %s\n", optarg);
 				if (!strcmp(optarg, "ON"))
 					command[5] = BYTE5_ON;
 				else if (!strcmp(optarg, "OFF"))
@@ -163,6 +171,8 @@ int main(int argc, char** argv) {
 					command[5] = BYTE5_ON;
 				}
 			case 'o':
+				if (!quiet)
+					printf("Set output to %s\n", optarg);
 				if (!strcmp(optarg, "HEX"))
 					output = HEX;
 				else if (!strcmp(optarg, "BIN"))
