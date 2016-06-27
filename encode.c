@@ -162,6 +162,7 @@ int main(int argc, char** argv) {
 					printf("power %s unrecognized, ON par defaut\n", optarg);
 					command[5] = BYTE5_ON;
 				}
+				break;
 			case 'o':
 				if (!strcmp(optarg, "HEX"))
 					output = HEX;
@@ -171,8 +172,10 @@ int main(int argc, char** argv) {
 					printf("output %s unrecognized, BIN par defaut\n", optarg);
 					output = BIN;
 				}
+				break;
 			case 'q':
 				quiet = 1;
+				break;
 			default: /* '?' */
 				printf("argument %c unrecognized\n",opt);
 				print_usage();
@@ -203,7 +206,7 @@ int main(int argc, char** argv) {
 			speed = SPEED1;
 		}
 		if (dir == 0xff) {
-			printf("Default set direction to 0 = UP");
+			printf("Default set direction to 0 = UP\n");
 			dir = DIR0;
 		}
 
@@ -238,7 +241,7 @@ int main(int argc, char** argv) {
 	} else if (output = HEX) {
 		printf("0x");
 		for (i = 0 ; i <= 14 ; i++){
-			printf("%H", command[i]);
+			printf("%X", command[i]);
 		}
 	} 
 	printf("\n");
