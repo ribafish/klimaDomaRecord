@@ -99,17 +99,17 @@ int main(int argc, char** argv) {
 	int output = BIN;
 	int quiet = 0;
 	uint8_t temp = 23;
-	uint8_t speed = SPEED1;
-	uint8_t dir = DIR0;
+	uint8_t speed = 0xff;
+	uint8_t dir = 0xff;
 
 	uint8_t command[14] = {
 		BYTE0, BYTE1, BYTE2, BYTE3, BYTE4,
-		BYTE5_ON, BYTE6_COLD, 0x00, 0x00,
+		0xff, 0xff, 0x00, 0x00,
 		BYTE9_12, BYTE9_12, BYTE9_12, BYTE9_12,
 		0x00
 	};
 
-	while ((opt = getopt(argc, argv, "s:d:m:p:o:")) != -1) {
+	while ((opt = getopt(argc, argv, "qs:d:m:p:o:")) != -1) {
 		switch (opt) {
 			case 'm':
 				if (!strcmp(optarg,"COOL"))
@@ -189,8 +189,26 @@ int main(int argc, char** argv) {
 		else if (temp > 31)
 			temp = 31;
 	}
-	if (!quiet)
+	if (!quiet) {
+		if (command[5] == 0xff) {
+			printf("Default set power to ON\n");
+			command[5] = BYTE5_ON;
+		}
+		if (command[6] = 0xff) {
+			printf("Default set mode to COLD\n");
+			command[6] = BYTE6_COLD;
+		}
+		if (speed = 0xff) {
+			printf("Default set to LOW speed\n");
+			speed = SPEED1;
+		}
+		if (dir == 0xff) {
+			printf("Default set direction to 0 = UP");
+			dir = DIR0;
+		}
+
 		printf("temp = %d\n",temp);
+	}
 
 	uint8_t tmp = 31 - temp;
 
