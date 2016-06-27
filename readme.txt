@@ -19,7 +19,7 @@ byte 6:
 byte 7: 
 	16C:   11110000
 	31C:   00000000
-	other: 00010000
+	23C:   00010000	
 byte 8: 
 first 3 bits: fan speed:
 	fan 0: 000
