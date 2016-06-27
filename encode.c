@@ -31,9 +31,13 @@
 #define DIR_SWING 0b111
 
 //output
-#define DEC 0
+#define RAW 0
 #define HEX 1
 #define BIN 2
+
+#define INTRO "3500 1650"
+#define ONE "550 1150"
+#define ZERO "550 550"
 
 unsigned char reverse_byte(unsigned char x)
 {
@@ -84,13 +88,31 @@ void print_binary(char c){
 }
 
 void print_usage(){
-	fprintf(stderr, "Usage: encode [-s speed] [-d direction] [-p power] [-o output] [-m mode] temperature (16 to 31)\n\
+	fprintf(stderr, "Usage: encode [-s speed] [-d direction] [-p power] [-o output] [-m mode] [-n name] temperature (16 to 31)\n\
 	Speed = AUTO, LOW, MID, HIGH\n\
 	Direction = 0: UP, 1, 2, 3, 4:DOWN, SWING\n\
 	Mode = COOL, HOT\n\
 	Power = ON, OFF\n\
-	Output = HEX, BIN\n");
+	Output = HEX, BIN, RAW\n");
 	exit(-1);
+}
+
+void print_raw(uint8_t c) {
+	int i;
+	uint8_t b;
+	//printf("%d in binary = ",c);
+	for ( i = 7 ; i >= 0 ; i--) {
+		b = (c >> i & 1);
+		if (b) 
+			printf("%s", ONE);
+		else 
+			printf("%s", ZERO);
+
+		if (i%4 == 0)
+			printf("\n");
+		else 
+			printf(" ");
+	}
 }
 
 int main(int argc, char** argv) {
@@ -101,6 +123,7 @@ int main(int argc, char** argv) {
 	uint8_t temp = 23;
 	uint8_t speed = 0xff;
 	uint8_t dir = 0xff;
+	char name [32] = 0;
 
 	uint8_t command[14] = {
 		BYTE0, BYTE1, BYTE2, BYTE3, BYTE4,
@@ -109,7 +132,7 @@ int main(int argc, char** argv) {
 		0x00
 	};
 
-	while ((opt = getopt(argc, argv, "qs:d:m:p:o:")) != -1) {
+	while ((opt = getopt(argc, argv, "qs:d:m:p:o:n:")) != -1) {
 		switch (opt) {
 			case 'm':
 				if (!quiet)
@@ -183,6 +206,13 @@ int main(int argc, char** argv) {
 					output = BIN;
 				}
 				break;
+			case 'n':
+				if (strlen(optarg) > sizeof(name)) {
+					printf("Name too long, max is 40 chars\n");
+					exit(-1);
+				}
+				strcpy(name, optarg);
+				break;
 			case 'q':
 				quiet = 1;
 				break;
@@ -248,6 +278,9 @@ int main(int argc, char** argv) {
 	}
 	command[14] = checksum;
 
+	if (strlen(name) > 0)
+		printf("%s\n", name);
+
 	if (output == BIN) {
 		for (i = 0 ; i <= 14 ; i++){
 			print_binary(command[i]);
@@ -258,7 +291,12 @@ int main(int argc, char** argv) {
 		for (i = 0 ; i <= 14 ; i++){
 			printf("%X", command[i]);
 		}
-	} 
+	} else if (output == RAW) {
+		printf("%s\n", INTRO);
+		for (i = 0 ; i <= 14 ; i++){
+			print_raw(command[i]);
+		}
+	}
 	printf("\n");
 
 }
