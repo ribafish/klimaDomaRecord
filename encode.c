@@ -202,26 +202,31 @@ int main(int argc, char** argv) {
 		else if (temp > 31)
 			temp = 31;
 	}
-	if (!quiet) {
-		if (command[5] == 0xff) {
+	
+	if (command[5] == 0xff) {
+		if (!quiet)
 			printf("Default set power to ON\n");
-			command[5] = BYTE5_ON;
-		}
-		if (command[6] = 0xff) {
-			printf("Default set mode to COLD\n");
-			command[6] = BYTE6_COLD;
-		}
-		if (speed = 0xff) {
-			printf("Default set to LOW speed\n");
-			speed = SPEED1;
-		}
-		if (dir == 0xff) {
-			printf("Default set direction to 0 = UP\n");
-			dir = DIR0;
-		}
-
-		printf("temp = %d\n",temp);
+		command[5] = BYTE5_ON;
 	}
+	if (command[6] == 0xff) {
+		if (!quiet)
+			printf("Default set mode to COLD\n");
+		command[6] = BYTE6_COLD;
+	}
+	if (speed == 0xff) {
+		if (!quiet)
+			printf("Default set to LOW speed\n");
+		speed = SPEED1;
+	}
+	if (dir == 0xff) {
+		if (!quiet)
+			printf("Default set direction to 0 = UP\n");
+		dir = DIR0;
+	}
+
+	if (!quiet)
+		printf("temp = %d\n",temp);
+	
 
 	uint8_t tmp = 31 - temp;
 
